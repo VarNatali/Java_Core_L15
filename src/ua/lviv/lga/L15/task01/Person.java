@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class Person {
     private String name;
     private int age;
-
-    List<Animal> pet = new ArrayList();
-    Scanner sc;
+    Scanner sc = new Scanner(System.in);
+    List<Animal> pet = new ArrayList<>();
 
     public void addPerson() {
-        sc = new Scanner(System.in);
-        System.out.println("Введіть iм'я учасника клубу:");
-        this.setName(sc.nextLine());
-        System.out.println("Введіть його вік:");
-        this.setAge(sc.nextInt());
-
+        System.out.println("Введіть iм'я учасника клубу: ");
+        setName(sc.nextLine());
+        System.out.println("Введіть його вік: ");
+        setAge(sc.nextInt());
 
     }
 

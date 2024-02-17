@@ -26,17 +26,13 @@ public class Animal {
 
         System.out.println("Введіть iм'я улюбленця: ");
         st = sc.nextLine();
-        System.out.println("Введіть  0 для  CAT, 1  для  DOG ");
+        System.out.println("Введіть 0  для  DOG, 1  для  CAT ");
         int typ = sc.nextInt();
         this.setName(st);
         this.setType(animalTypes.get(typ));
     }
 
     public void setType(AnimalType type) {
-        this.type = type;
-    }
-
-    public void setType() {
         this.type = type;
     }
 

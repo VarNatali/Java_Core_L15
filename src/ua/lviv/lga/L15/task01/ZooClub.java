@@ -5,36 +5,35 @@ import java.util.*;
 
 public class ZooClub {
     Map<Person, List<Animal>> map = new HashMap<>();
-
-    List<Person> person = new ArrayList();
     Scanner sc = new Scanner(System.in);
     int num = -1;
     String st;
+    int age = 0;
 
     public void addMember() {
         num = -1;
         Person pr = new Person();
         pr.addPerson();
-
         num = getPersonExist(pr.getName());
+        if (num > -1) {
+            System.out.println("Така персона вже існує. Введіть іншого учасника клубу.");
+        } else {
 
-        if (num > -1) System.out.println("Така персона вже існує. Введіть іншого учасника клубу.");
-        else {
-            person.add(pr);
-            System.out.println("Персону успішно додали до клубу");
             map.put(pr, new ArrayList<>());
+            System.out.println("Персону успішно додали до клубу");
         }
     }
 
     private int getPersonExist(String name) {
         int num = -1;
 
-        for (Person pr : person) {
-            if (pr.getName().equalsIgnoreCase(name)) {
+        Set<Map.Entry<Person, List<Animal>>> entrySet = map.entrySet();
+
+        for (Map.Entry<Person, List<Animal>> pair : entrySet) {
+            if (pair.getKey().getName().equalsIgnoreCase(name)) {
                 num++;
             }
         }
-
         return num;
     }
 
@@ -47,19 +46,17 @@ public class ZooClub {
         if (num == -1) {
             System.out.println("Такої персони ще немає в клубі.");
         } else {
-            Iterator<Map.Entry<Person, List<Animal>>> iterator = map.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Person, List<Animal>> next = iterator.next();
 
-                if (next.getKey().getName().equals(st)) {
-                    List<Animal> animalList = next.getValue();
-                    next.getKey().addPet(animal);
+            Set<Map.Entry<Person, List<Animal>>> entrySet = map.entrySet();
 
+            for (Map.Entry<Person, List<Animal>> pair : entrySet) {
+                if (pair.getKey().getName().equalsIgnoreCase(st)) {
+                    List<Animal> animalList = pair.getValue();
+                    pair.getKey().addPet(animal);
                     animalList.add(animal);
-                    next.setValue(animalList);
-
+                    pair.setValue(animalList);
+                    System.out.println("Тваринку " + animal + " додано");
                 }
-
 
             }
         }
@@ -74,17 +71,18 @@ public class ZooClub {
         if (num == -1) {
             System.out.println("Такої персони ще немає в клубі.");
         } else {
-            Iterator<Map.Entry<Person, List<Animal>>> iterator = map.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Person, List<Animal>> next = iterator.next();
 
-                if (next.getKey().getName().equals(st)) {
-                    iterator.remove();
+            Map<Person, List<Animal>> mapCopy = new HashMap<>(map);
+            Set<Map.Entry<Person, List<Animal>>> entrySetCopy = mapCopy.entrySet();
+            for (Map.Entry<Person, List<Animal>> pairCopy : entrySetCopy) {
+                if (pairCopy.getKey().getName().equalsIgnoreCase(st)) {
+                    map.entrySet().remove(pairCopy);
                     System.out.println("Учасника клубу " + st + " видалено.");
+
                 }
             }
-        }
 
+        }
     }
 
     public void deleteAllCat() {
@@ -92,30 +90,26 @@ public class ZooClub {
         System.out.println("Введіть тип тваринки");
         System.out.println("CAT or DOG ");
         st = sc.nextLine();
+        int size = 0;
 
-        Iterator<Map.Entry<Person, List<Animal>>> iterator = map.entrySet().iterator();
 
+        Set<Map.Entry<Person, List<Animal>>> entrySet = map.entrySet();
 
-        while (iterator.hasNext()) {
+        for (Map.Entry<Person, List<Animal>> pair : entrySet) {
+            List<Animal> animalList = pair.getValue();
+            Iterator<Animal> iterator = animalList.iterator();
 
-            Map.Entry<Person, List<Animal>> nextMap = iterator.next();
-            List<Animal> animalList = nextMap.getValue();
-            Iterator<Animal> iterator1 = animalList.iterator();
-
-            while (iterator1.hasNext()) {
-
-                if (iterator1.next().getType().name().equalsIgnoreCase(st)) {
-                    iterator1.remove();
+            while (iterator.hasNext()) {
+                if (iterator.next().getType().name().equalsIgnoreCase(st)) {
+                    iterator.remove();
                     num++;
 
                 }
             }
-            if (num > -1) System.out.println("Успішно видалено");
-            else System.out.println("Такої тваринки учасники не мають.");
-
         }
+        if (num > -1) System.out.println("Успішно видалено.");
+        else System.out.println("Такої тваринки учасники не мають.");
     }
-
 
     public void deletePetOfMember() {
         num = -1;
@@ -126,48 +120,43 @@ public class ZooClub {
         if (num == -1) {
             System.out.println("Такої персони  немає в клубі.");
         } else {
-            Iterator<Map.Entry<Person, List<Animal>>> iterator = map.entrySet().iterator();
 
-            while (iterator.hasNext()) {
+            Set<Map.Entry<Person, List<Animal>>> entrySet = map.entrySet();
 
-                Map.Entry<Person, List<Animal>> next = iterator.next();
+            for (Map.Entry<Person, List<Animal>> pair : entrySet) {
+                if (pair.getKey().getName().equalsIgnoreCase(st)) {
+                    List<Animal> animalList = pair.getValue();
+                    Iterator<Animal> iterator = animalList.iterator();
+                    while (iterator.hasNext()) {
+                        iterator.next();
+                        iterator.remove();
 
-                if (next.getKey().getName().equalsIgnoreCase(st)) {
-
-                    System.out.println(next.getKey().getName() + "   має таких тваринок:  " + next.getValue());
-                    List<Animal> animalList = next.getValue();
-
-                    Iterator<Animal> iterator1 = animalList.iterator();
-
-                    while (iterator1.hasNext()) {
-                        iterator1.next();
-                        iterator1.remove();
                     }
                     System.out.println("Видалено всіх тварюк у  " + st);
-
                 }
             }
-            //   sc.close();
-
         }
+
     }
+
 
     public void showAllMembers() {
 
         if (!map.isEmpty()) {
 
-            Iterator<Map.Entry<Person, List<Animal>>> iterator = map.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Person, List<Animal>> next = iterator.next();
+            Set<Map.Entry<Person, List<Animal>>> entrySet = map.entrySet();
 
-                if (next.getValue().size() == 0)
-                    System.out.println("Учасник клубу:  " + next.getKey() + "  ще не вказав тваринок");
+            for (Map.Entry<Person, List<Animal>> pair : entrySet) {
+                if (pair.getValue().isEmpty()) {
+                    System.out.println("Учасник клубу:  " + pair.getKey() + "  ще не вказав тваринок");
 
-                else {
-                    System.out.println("Учасник клубу:  " + next.getKey() + ",  улюбленці:  ");
-                    for (int i = 0; i < next.getValue().size(); i++) {
-                        System.out.println(next.getValue().get(i).getType() + " кличка " + next.getValue().get(i).getName());
+                } else {
+                    System.out.println("Учасник клубу:  \n" + pair.getKey() + ", \nулюбленці:  ");
+                    List<Animal> animalList = pair.getValue();
+                    for (Animal al : animalList) {
+                        System.out.println(al.getType() + " кличка  " + al.getName());
                     }
+
                 }
 
             }
@@ -183,34 +172,32 @@ public class ZooClub {
         num = -1;
         System.out.println("Введіть iм'я учасника клубу");
         st = sc.nextLine();
-
         num = getPersonExist(st);
-
         if (num == -1) {
             System.out.println("Такої персони  немає в клубі.");
         } else {
-            Iterator<Map.Entry<Person, List<Animal>>> iterator = map.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Person, List<Animal>> next = iterator.next();
 
-                if (next.getKey().getName().equals(st)) {
+            Set<Map.Entry<Person, List<Animal>>> entrySet = map.entrySet();
 
-                    System.out.println("Person:  " + next.getKey().getName());
-                    List<Animal> animalList = next.getValue();
-                    if (animalList.size() == 0)
-                        System.out.println("Person:  " + next.getKey().getName() + "ще не має улюбленців");
-                    else {
-                        for (int i = 0; i < animalList.size(); i++) {
-                            System.out.println("  Улюбленець: " + animalList.get(i).getType() + " на ім'я " + animalList.get(i).getName());
+            for (Map.Entry<Person, List<Animal>> pair : entrySet) {
+
+                if (pair.getKey().getName().equalsIgnoreCase(st)) {
+                    List<Animal> animalList = pair.getValue();
+                    if (animalList.isEmpty()) {
+                        System.out.println("Person:  " + pair.getKey().getName() + "  ще не має улюбленців");
+                    } else {
+                        for (Animal al : animalList) {
+                            System.out.println("  Улюбленець: " + al.getType() + " кличка  " + al.getName());
 
                         }
                     }
-
 
                 }
 
 
             }
+
+
         }
     }
 
